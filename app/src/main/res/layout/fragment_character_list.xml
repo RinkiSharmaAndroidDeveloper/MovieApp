@@ -18,4 +18,5 @@
         app:layoutManager="LinearLayoutManager"
         tools:context="com.urbn.android.flickster.presentation.HostActivity"
         tools:listitem="@layout/character_item_content" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

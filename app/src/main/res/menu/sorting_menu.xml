@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_sort_alphabetical"
-        android:title="Sort Alphabetical" />
+        android:title="Sort Alphabetical"
+       />
     <item
         android:id="@+id/action_sort_reverse_alphabetical"
         android:title="Sort Reverse Alphabetical" />

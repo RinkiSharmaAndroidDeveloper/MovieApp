@@ -1,6 +1,8 @@
 package com.urbn.android.flickster.data.remote
 
-data class CharacterListData(
-    val RelatedTopics: List<RelatedTopic>,
+import com.google.gson.annotations.SerializedName
 
+data class CharacterListData(
+    @SerializedName("RelatedTopics")
+    val relatedTopics: List<RelatedTopic>,
 )

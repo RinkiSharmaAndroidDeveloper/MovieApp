@@ -7,12 +7,12 @@ import androidx.room.*
 interface CharacterDao {
 
     @Query("SELECT * FROM character")
-      suspend fun getAllCharacters(): List<CharacterEntity>
+       fun getAllCharacters(): List<CharacterEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
      fun insertAll(characters: List<CharacterEntity>)
 
-//    @Query("UPDATE character SET isFavorite = :isFavorite WHERE id = :id")
-//    suspend fun updateIsFavorite(id: Long, isFavorite: Boolean)
+   @Query("UPDATE character SET isFavorite = :isFavorite WHERE id = :id")
+   suspend fun updateIsFavorite(id: Long, isFavorite: Boolean)
 
 }

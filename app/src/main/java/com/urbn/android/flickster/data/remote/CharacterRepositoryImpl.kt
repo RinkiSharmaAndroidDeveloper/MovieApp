@@ -1,47 +1,62 @@
 package com.urbn.android.flickster.data.remote
 
+import android.content.Context
 import android.util.Log
-import com.urbn.android.flickster.domain.util.Resource
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.urbn.android.flickster.db.CharacterEntity
+import com.urbn.android.flickster.db.DatabaseService
+import com.urbn.android.flickster.presentation.util.ConnectionUtilData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CharacterRepositoryImpl constructor(private val api: CharacterRepoApi) {
+class CharacterRepositoryImpl(
+    private val api: CharacterRepoApi,
+    private val databaseService: DatabaseService,
+    private val applicationContext: Context
+) {
+    private var _characters = MutableLiveData<List<CharacterEntity>>()
+    val characters: LiveData<List<CharacterEntity>>
+        get() = _characters
 
-//     suspend fun getCharactersList(): Resource<CharacterListData> {
-//        return try {
-//            withContext(Dispatchers.IO) {
-//                // Return a Resource.Loading value to indicate that the request is in progress
-//                Resource.Loading(loadingStatus = true, data = null)
-//
-//                // Actually perform the API request and convert the response to CharacterListDataResult objects
-//                val response = api.getCharacterList()
-////                if(response.isSuccessful()){
-////                    Log.e("hi","yes")
-////                }
-//              //  val resultList = ArrayList<CharacterListResponse>()
-////                response.forEach { pokemonListResponse ->
-////                    pokemonListResponse.relatedTopics.forEach { relatedTopic ->
-////                        resultList.add(
-////                            CharacterListDataResult(
-////                                name = relatedTopic.text,
-////                                details = "",
-////                                imageUrl = relatedTopic.icon.url
-////                            )
-////                        )
-////                    }
-////                }
-//                Log.d("value_response",response.toString())
-//
-//        Resource.Success(data = response)
-//
-//
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            withContext(Dispatchers.IO) {
-//                // If an error occurs, return a Resource.Failure value with the error message
-//                Resource.Failure(e.localizedMessage ?: "An unknown error occurred")
-//            }
-//        }
-//    }
+
+    suspend fun fetchMoviesList() {
+        //if Network is present
+        if (ConnectionUtilData.isNetworkAvailable(context = applicationContext)) {
+            val response = api.getCharacterList()
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    val characterEntities = response.body()?.relatedTopics?.map { it ->
+                        CharacterEntity(
+                            name = getFormattedName(it.text) ?: "",
+                            details = getDetails(it.text) ?: "",
+                            imageUrl = getImageUrl(it.icon.url),
+                            isFavorite = false
+                        )
+                    }
+                    withContext(Dispatchers.IO) {
+                        characterEntities.let {
+                            if (it != null) {
+                                databaseService?.characterDao()?.insertAll(it)
+                            }
+                        }
+                    }
+                    _characters.postValue(characterEntities)
+                } else {
+                    Log.d("Error: ", "${response.message()}")
+                }
+            }
+        }
+        // get data from the database
+        else {
+            _characters.postValue(databaseService?.characterDao()?.getAllCharacters())
+        }
+    }
+
+    suspend fun updateIsFavorite(id: Long, isFavorite: Boolean) {
+        databaseService?.characterDao()?.updateIsFavorite(id, isFavorite)
+    }
+
 }

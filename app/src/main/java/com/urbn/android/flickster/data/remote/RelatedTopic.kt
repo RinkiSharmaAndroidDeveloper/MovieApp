@@ -1,31 +1,30 @@
 package com.urbn.android.flickster.data.remote
 
+import com.google.gson.annotations.SerializedName
+
 data class RelatedTopic(
-    val FirstURL: String,
-    val Icon: Icon,
-    val Result: String,
-    val Text: String
+    @SerializedName("Icon")
+    val icon: Icon,
+    @SerializedName("Text")
+    val text: String
 )
+
+data class Icon(
+    @SerializedName("URL")
+    val url: String
+)
+
+//Getting name from the data
 fun getFormattedName(name: String?): String?{
     val textParts = name?.split(" - ")
     return textParts?.getOrElse(0) { "" }
 }
+//Sepearting detail from the data
 fun getDetails(name: String?): String?{
     val textParts = name?.split(" - ")
     return textParts?.getOrElse(1) { "" }
 }
+// Creating image url
 fun getImageUrl(url:String?):String?{
     return "https://www.duckduckgo.com/${url}"
 }
-//{
-//    val name: String
-//    val details: String
-//    val imageUrl: String
-//
-//    init {
-//        val textParts = Text.split(" - ")
-//        name = textParts.getOrElse(0) { "" }
-//        details = textParts.getOrElse(1) { "" }
-//        imageUrl = "https://www.duckduckgo.com/i/${Icon.URL}"
-//    }
-//}

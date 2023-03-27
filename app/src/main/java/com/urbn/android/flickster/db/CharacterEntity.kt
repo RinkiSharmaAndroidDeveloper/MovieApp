@@ -16,8 +16,7 @@ data class CharacterEntity(
     @ColumnInfo(name = "image_url")
     @Nullable
     val imageUrl: String? = null,
-
-    @ColumnInfo(name = "is_favorite")
+    @ColumnInfo(name = "isFavorite")
     val isFavorite: Boolean = false
 )
 
