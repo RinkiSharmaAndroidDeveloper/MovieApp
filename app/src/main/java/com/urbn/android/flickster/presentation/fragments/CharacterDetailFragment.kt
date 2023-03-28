@@ -3,7 +3,6 @@ package com.urbn.android.flickster.presentation.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import com.urbn.android.flickster.MyApplication
@@ -38,8 +37,6 @@ class CharacterDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-       // val activity = requireActivity() as AppCompatActivity
-       // activity.supportActionBar?.title = character?.name
         binding.characterName.text = character?.name
         binding.detailTextView.text = character?.details
         Picasso.get().load(character?.imageUrl).into(binding.characterImage)
