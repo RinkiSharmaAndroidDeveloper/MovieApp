@@ -49,8 +49,9 @@ class CharacterListFragment : Fragment() {
         characterViewModel.liveData.observe(viewLifecycleOwner){
             characterEntity = it
             adapter.submitList(characterEntity)
+            binding.swipeRefreshLayout.isRefreshing = false
         }
-
+        binding.swipeRefreshLayout.setOnRefreshListener { characterViewModel.getAllCharacter() }
         recyclerView.adapter = adapter
     }
 
