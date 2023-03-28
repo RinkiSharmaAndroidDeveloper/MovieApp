@@ -1,13 +1,13 @@
 package com.urbn.android.flickster
 
-import android.content.Context
+
 import androidx.test.core.app.ApplicationProvider
 import com.urbn.android.flickster.data.remote.CharacterRepositoryImpl
 import com.urbn.android.flickster.db.CharacterEntity
 import com.urbn.android.flickster.presentation.util.SortMethod
+
 import com.urbn.android.flickster.presentation.view_model.CharacterViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
@@ -20,41 +20,55 @@ import org.robolectric.shadows.ShadowLog
 
 @RunWith(MockitoJUnitRunner::class)
 class CharacterViewModelTest {
-//
-//    @Mock
-//    lateinit var characterRepoApi: CharacterRepositoryImpl
-//
-//
-//    lateinit var characterViewModel: CharacterViewModel
-//
-//    @Before
-//    fun setup() {
-//        ShadowLog.stream = System.out
-//        val context = ApplicationProvider.getApplicationContext<Context>()
-//        val app = ApplicationProvider.getApplicationContext() as MyApplication
-//        app.onCreate()
+
+
+    @Mock
+    var app = ApplicationProvider.getApplicationContext() as MyApplication
+
+    @Mock
+    lateinit var characterViewModel: CharacterViewModel
+
+    @Mock
+    lateinit var characterRepoApi: CharacterRepositoryImpl
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.openMocks(this)
+     //   ShadowLog.stream = System.out
+        app.onCreate()
+        characterRepoApi = app.characterRepoApi
+        characterViewModel = CharacterViewModel(characterRepoApi)
+
+
+
+    }
+
+    @Test
+    fun testCharacterRepoApi() {
+
 //        characterRepoApi = app.characterRepoApi
-//        MockitoAnnotations.openMocks(this)
 //        characterViewModel = CharacterViewModel(characterRepoApi)
-//    }
-//
-//    @Test
-//    fun testSortList_alphabetical() {
-//        val characters = listOf(
-//            CharacterEntity(1, "Mike", "", "", false),
-//            CharacterEntity(2, "Adam", "", "", false),
-//            CharacterEntity(3, "John", "", "", false)
-//        )
-//        val sortedList = characterViewModel.sortList(SortMethod.ALPHABETICAL, characters)
-//        assertEquals(
-//            sortedList, listOf(
-//                CharacterEntity(2, "Adam", "", "", false),
-//                CharacterEntity(3, "John", "", "", false),
-//                CharacterEntity(1, "Mike", "", "", false)
-//            )
-//        )
-//    }
-//
+//        assertNotNull(characterRepoApi)
+        // perform your tests using characterRepoApi instance
+    }
+
+    @Test
+    fun testSortList_alphabetical() {
+        val characters = listOf(
+            CharacterEntity(1, "Mike", "", "", false),
+            CharacterEntity(2, "Adam", "", "", false),
+            CharacterEntity(3, "John", "", "", false)
+        )
+        val sortedList = characterViewModel.sortList(SortMethod.ALPHABETICAL, characters)
+        assertEquals(
+            sortedList, listOf(
+                CharacterEntity(2, "Adam", "", "", false),
+                CharacterEntity(3, "John", "", "", false),
+                CharacterEntity(1, "Mike", "", "", false)
+            )
+        )
+    }
+
 //    @Test
 //    fun testSortList_descending() {
 //        val characters = listOf(
